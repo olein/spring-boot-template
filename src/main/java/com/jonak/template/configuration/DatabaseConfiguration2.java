@@ -20,8 +20,8 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-@Profile("Development")
-public class DatabaseConfiguration {
+@Profile("test")
+public class DatabaseConfiguration2 {
 
     @Autowired
     private Environment env;
@@ -36,7 +36,7 @@ public class DatabaseConfiguration {
         }
         dataSource.setJdbcUrl(env.getProperty("db.url"));
         dataSource.setUser(env.getProperty("db.username"));
-        dataSource.setPassword(env.getProperty("db.password"));
+        dataSource.setPassword("fahim1");
 
         dataSource.setMinPoolSize(5);
         dataSource.setMaxPoolSize(120);

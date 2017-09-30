@@ -68,8 +68,8 @@ public class PersonServiceImpl implements PersonService{
         data.setResult(true);
 
         //for testing retry
-        log.info("Throwing exception");
-        test();
+//        log.info("Throwing exception");
+//        test();
         return CompletableFuture.completedFuture(data);
     }
 
