@@ -7,6 +7,7 @@ public class PersonData {
     private String street;
     private int zip;
     private boolean result;
+    private int personId;
 
     public PersonData() {
     }
@@ -60,5 +61,14 @@ public class PersonData {
 
     public void setResult(boolean result) {
         this.result = result;
+    }
+
+    public PersonData withPersonId(int personId) {
+        this.personId = personId;
+        return this;
+    }
+
+    public int getPersonId() {
+        return personId;
     }
 }
