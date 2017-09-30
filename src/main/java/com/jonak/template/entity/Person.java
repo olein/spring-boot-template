@@ -1,9 +1,15 @@
 package com.jonak.template.entity;
 
+import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Store;
+
 import javax.persistence.*;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
+@Indexed
 @Table(name = "person", catalog = "template")
 public class Person implements java.io.Serializable {
 
@@ -34,6 +40,7 @@ public class Person implements java.io.Serializable {
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
+
     @JoinColumn(name = "address_id", nullable = false)
     public Address getAddress() {
         return this.address;
@@ -43,7 +50,7 @@ public class Person implements java.io.Serializable {
         this.address = address;
     }
 
-
+    @Field(store = Store.YES, analyze = Analyze.NO)
     @Column(name = "name", nullable = false, length = 100)
     public String getName() {
         return this.name;

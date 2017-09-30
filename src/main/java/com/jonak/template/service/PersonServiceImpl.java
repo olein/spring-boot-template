@@ -51,7 +51,6 @@ public class PersonServiceImpl implements PersonService{
     }
 
     @Async
-    //@Retryable( maxAttempts = 2, backoff=@Backoff(delay = 1000))
     @Override
     public CompletableFuture<PersonData> getPerson(PersonData personData) throws Exception {
         Person person = personDao.findOne(personData.getPersonId());

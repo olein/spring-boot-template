@@ -46,39 +46,4 @@ public class DatabaseConfiguration {
 
         return dataSource;
     }
-
-    @Bean()
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-        LocalContainerEntityManagerFactoryBean entityManagerFactory =
-                new LocalContainerEntityManagerFactoryBean();
-
-        entityManagerFactory.setDataSource(dataSource());
-
-        // Classpath scanning of @Component, @Service, etc annotated class
-        entityManagerFactory.setPackagesToScan(env.getProperty("entitymanager.packagesToScan"));
-
-        // Vendor adapter
-        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        entityManagerFactory.setJpaVendorAdapter(vendorAdapter);
-
-        // Hibernate properties
-        Properties additionalProperties = new Properties();
-        additionalProperties.put("hibernate.dialect", env.getProperty("hibernate.dialect"));
-        additionalProperties.put("hibernate.show_sql",env.getProperty("hibernate.show_sql"));
-        //additionalProperties.put("hibernate.hbm2ddl.auto",env.getProperty("hibernate.hbm2ddl.auto"));
-        entityManagerFactory.setJpaProperties(additionalProperties);
-        return entityManagerFactory;
-    }
-
-    @Bean
-    public JpaTransactionManager transactionManager() {
-        JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
-        return transactionManager;
-    }
-
-    @Bean
-    public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
-        return new PersistenceExceptionTranslationPostProcessor();
-    }
 }
