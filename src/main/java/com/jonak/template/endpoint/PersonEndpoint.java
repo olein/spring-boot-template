@@ -82,4 +82,41 @@ public class PersonEndpoint {
         log.info("Task completed in " + (end - start) + " ms");
         return response;
     }
+
+    @RequestMapping(value = "/getPersonByName", method = RequestMethod.GET)
+    public @ResponseBody
+    GetPersonResponse getContactByName(@PathParam("personName") String personName) {
+        GetPersonResponse response = new GetPersonResponse();
+
+        long start = System.currentTimeMillis();
+
+        if (personName != null) {
+            try {
+                CompletableFuture<PersonData> result = personService.getPersonByName(personName);
+                if (result.get() != null) {
+                    response.setMobile(result.get().getMobile());
+                    response.setName(result.get().getName());
+                    response.setStreet(result.get().getStreet());
+                    response.setResult(Boolean.TRUE);
+                } else {
+                    log.info("result not found");
+                    response.setResult(false);
+                }
+            } catch (InterruptedException ex) {
+                log.info("ex " + ex.getMessage());
+                response.setResult(Boolean.FALSE);
+            } catch (ExecutionException ex) {
+                log.info("ex " + ex.getMessage());
+                response.setResult(Boolean.FALSE);
+            } catch (Exception ex) {
+                log.info("ex " + ex.getMessage());
+                response.setResult(Boolean.FALSE);
+            }
+        } else {
+            response.setResult(Boolean.FALSE);
+        }
+        long end = System.currentTimeMillis();
+        log.info("Task completed in " + (end - start) + " ms");
+        return response;
+    }
 }

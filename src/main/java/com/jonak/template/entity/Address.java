@@ -1,5 +1,10 @@
 package com.jonak.template.entity;
 
+import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Store;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -7,6 +12,7 @@ import java.util.Set;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
+@Indexed
 @Table(name = "address", catalog = "template")
 public class Address implements java.io.Serializable {
 
@@ -44,6 +50,8 @@ public class Address implements java.io.Serializable {
 
 
     @Column(name = "street", nullable = false, length = 10)
+    //@Field(store = Store.YES, analyze = Analyze.NO)
+    @Field(store = Store.NO, analyze = Analyze.YES)
     public String getStreet() {
         return this.street;
     }
@@ -54,6 +62,8 @@ public class Address implements java.io.Serializable {
 
 
     @Column(name = "zip", nullable = false)
+    //@Field(store = Store.YES, analyze = Analyze.NO)
+    @Field(store = Store.NO, analyze = Analyze.YES)
     public int getZip() {
         return this.zip;
     }

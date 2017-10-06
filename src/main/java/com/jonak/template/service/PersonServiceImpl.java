@@ -5,32 +5,37 @@ import com.jonak.template.dao.PersonDao;
 import com.jonak.template.data.PersonData;
 import com.jonak.template.entity.Address;
 import com.jonak.template.entity.Person;
-//import org.hibernate.search.jpa.FullTextEntityManager;
-//import org.hibernate.search.query.dsl.QueryBuilder;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.Query;
+import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Recover;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
 
-@Component
-public class PersonServiceImpl implements PersonService{
+@Service
+public class PersonServiceImpl implements PersonService {
 
-    private static Logger log =  Logger.getLogger(PersonServiceImpl.class.getName());
+    private static Logger log = Logger.getLogger(PersonServiceImpl.class.getName());
 
     @Autowired
     private PersonDao personDao;
 
     @Autowired
     private AddressDao addressDao;
+
+    @Autowired
+    LuceneQueryFactory luceneQueryFactory;
+
+    @Autowired
+    private FullTextEntityManagerFactory factory;
 
     @Async
     @Override
@@ -56,8 +61,8 @@ public class PersonServiceImpl implements PersonService{
         Person person = personDao.findOne(personData.getPersonId());
         Address address = addressDao.findOne(person.getAddress().getId());
         PersonData data = new PersonData();
-        log.info(person.getMobile()+ " "+ address.getStreet());
-        if(person==null || address==null) {
+        log.info(person.getMobile() + " " + address.getStreet());
+        if (person == null || address == null) {
             data.setResult(false);
             return CompletableFuture.completedFuture(data);
         }
@@ -77,37 +82,52 @@ public class PersonServiceImpl implements PersonService{
         throw new RuntimeException();
     }
 
-//    @PersistenceContext
-//    private EntityManager entityManager;
-//
-//    public List search(String text) {
-//
-//        // get the full text entity manager
-//        FullTextEntityManager fullTextEntityManager =
-//                org.hibernate.search.jpa.Search.
-//                        getFullTextEntityManager(entityManager);
-//
-//        // create the query using Hibernate Search query DSL
-//        QueryBuilder queryBuilder =
-//                fullTextEntityManager.getSearchFactory()
-//                        .buildQueryBuilder().forEntity(Person.class).get();
-//
-//        // a very basic query by keywords
-//        org.apache.lucene.search.Query query =
-//                queryBuilder
-//                        .keyword()
-//                        .onFields("id", "name", "mobile")
-//                        .matching(text)
-//                        .createQuery();
-//
-//        // wrap Lucene query in an Hibernate Query object
-//        org.hibernate.search.jpa.FullTextQuery jpaQuery =
-//                fullTextEntityManager.createFullTextQuery(query, Person.class);
-//
-//        // execute search and return results (sorted by relevance as default)
-//        @SuppressWarnings("unchecked")
-//        List results = jpaQuery.getResultList();
-//
-//        return results;
-//    } // method search
+
+    /*
+    * Lucene integrated
+    * get the factory and query builder if needed
+    * basic and term query is exact match
+    * wild card is substring match
+    * Boolean query is combination of queries. and or not applicable.
+    * */
+    @Async
+    @Override
+    @Transactional
+    public CompletableFuture<PersonData> getPersonByName(String name) {
+
+        // get the full text entity manager
+        FullTextEntityManager fullTextEntityManager = factory.getFullTextEntityManager();
+
+        // create the query using Hibernate Search query DSL
+        QueryBuilder queryBuilder = luceneQueryFactory.getQueryBuilder(fullTextEntityManager, Person.class);
+
+        Query basicQuery = luceneQueryFactory.createBasicQuery(queryBuilder, name);
+
+        Query wildcardQuery = luceneQueryFactory.createWildCardQuery("name", name);
+
+        Query termQuery = luceneQueryFactory.createTermQuery("name", name);
+
+        List<BooleanClause> list = new ArrayList<BooleanClause>();
+        list.add(new BooleanClause(basicQuery, BooleanClause.Occur.SHOULD));
+        list.add(new BooleanClause(wildcardQuery, BooleanClause.Occur.SHOULD));
+        list.add(new BooleanClause(termQuery, BooleanClause.Occur.SHOULD));
+        BooleanQuery query = luceneQueryFactory.createBooleanQuery(list);
+
+        // wrap Lucene query in an Hibernate Query object
+        org.hibernate.search.jpa.FullTextQuery jpaQuery =
+                fullTextEntityManager.createFullTextQuery(query, Person.class);
+
+        // execute search and return results (sorted by relevance as default)
+        @SuppressWarnings("unchecked")
+        List<Person> results = jpaQuery.getResultList();
+        log.info("size " + results.size());
+        PersonData data = new PersonData();
+        data.setName(results.get(0).getName());
+        data.setMobile(results.get(0).getMobile());
+        data.setStreet(results.get(0).getAddress().getStreet());
+
+        return CompletableFuture.completedFuture(data);
+    }
+
+
 }

@@ -38,7 +38,7 @@ public class DatabaseConfiguration {
         dataSource.setUser(env.getProperty("db.username"));
         dataSource.setPassword(env.getProperty("db.password"));
 
-        dataSource.setMinPoolSize(5);
+        dataSource.setMinPoolSize(10);
         dataSource.setMaxPoolSize(120);
         dataSource.setMaxIdleTime(10000);
         dataSource.setMaxStatements(50);

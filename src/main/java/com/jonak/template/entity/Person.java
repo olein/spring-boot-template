@@ -40,7 +40,6 @@ public class Person implements java.io.Serializable {
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
-
     @JoinColumn(name = "address_id", nullable = false)
     public Address getAddress() {
         return this.address;
@@ -50,7 +49,7 @@ public class Person implements java.io.Serializable {
         this.address = address;
     }
 
-    @Field(store = Store.YES, analyze = Analyze.NO)
+    @Field(store = Store.NO, analyze = Analyze.YES)
     @Column(name = "name", nullable = false, length = 100)
     public String getName() {
         return this.name;
@@ -62,6 +61,8 @@ public class Person implements java.io.Serializable {
 
 
     @Column(name = "mobile", nullable = false, length = 20)
+    @Field(store = Store.NO, analyze = Analyze.YES)
+    //@Field(store = Store.YES, analyze = Analyze.NO)
     public String getMobile() {
         return this.mobile;
     }
