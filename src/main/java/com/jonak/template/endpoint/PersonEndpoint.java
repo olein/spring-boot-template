@@ -50,7 +50,7 @@ public class PersonEndpoint {
         return response;
     }
 
-    @RequestMapping(value = "/getPersonById", method = RequestMethod.GET)
+    @RequestMapping(value = "/getPersonById", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
     GetPersonResponse getContact(@PathParam("personId") int personId) {
         GetPersonResponse response = new GetPersonResponse();
