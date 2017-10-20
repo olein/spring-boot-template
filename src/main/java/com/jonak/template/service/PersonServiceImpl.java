@@ -11,6 +11,8 @@ import org.apache.lucene.search.Query;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +42,7 @@ public class PersonServiceImpl implements PersonService {
     @Async
     @Override
     @Transactional
+    @CacheEvict(value = "person", allEntries = true)
     public CompletableFuture<Boolean> createPerson(PersonData personData) {
 
         Address address = new Address(personData.getStreet(), personData.getZip());
@@ -93,6 +96,7 @@ public class PersonServiceImpl implements PersonService {
     @Async
     @Override
     @Transactional
+    @Cacheable(value="person", key="#name")
     public CompletableFuture<PersonData> getPersonByName(String name) {
 
         // get the full text entity manager
@@ -130,4 +134,18 @@ public class PersonServiceImpl implements PersonService {
     }
 
 
+    @Async
+    @Override
+    @Transactional
+    @Cacheable(value="person", key="#name")
+    public CompletableFuture<PersonData> getPersonByNameUsingJpa(String name) {
+
+        Person person = personDao.findFirstByName(name);
+        PersonData data = new PersonData();
+        data.setName(person.getName());
+        data.setMobile(person.getMobile());
+        data.setStreet(person.getAddress().getStreet());
+
+        return CompletableFuture.completedFuture(data);
+    }
 }

@@ -1,6 +1,8 @@
 package com.jonak.template.data;
 
-public class PersonData {
+import java.io.Serializable;
+
+public class PersonData implements Serializable{
 
     private String name;
     private String mobile;

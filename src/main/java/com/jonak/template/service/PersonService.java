@@ -17,4 +17,6 @@ public interface PersonService {
     @Retryable(maxAttempts = 3, backoff=@Backoff(delay = 1000))
     public CompletableFuture<PersonData> getPersonByName(String name);
 
+    public CompletableFuture<PersonData> getPersonByNameUsingJpa(String name);
+
 }
