@@ -11,10 +11,13 @@
            maxEntriesLocalDisk="1000"
            eternal="false"
            diskSpoolBufferSizeMB="20"
-           timeToIdleSeconds="300" timeToLiveSeconds="600"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
            memoryStoreEvictionPolicy="LFU"
            transactionalMode="off">
         <persistence strategy="localTempSwap" />
+        <!--<persistence strategy="distributed"/>-->
+        <!--<terracotta clustered="true" consistency="eventual" />-->
     </cache>
 
 </ehcache>
