@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.retry.annotation.EnableRetry;
@@ -15,6 +16,7 @@ import org.springframework.retry.annotation.EnableRetry;
 @ComponentScan("com.jonak.template")
 @EnableJpaRepositories
 @EnableRetry
+@EnableCaching
 public class TemplateApplication extends SpringBootServletInitializer {
 
 	@Override
