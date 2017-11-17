@@ -11,6 +11,11 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManager;
@@ -20,8 +25,10 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @Profile("Development")
-public class DatabaseConfiguration {
+public class DatabaseConfiguration  extends WebSecurityConfigurerAdapter{
 
     @Autowired
     private Environment env;
@@ -46,4 +53,26 @@ public class DatabaseConfiguration {
 
         return dataSource;
     }
+
+    @Autowired
+    public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
+
+        auth.jdbcAuthentication().dataSource(dataSource())
+                .usersByUsernameQuery(
+                        "select username,password, enabled from users where username=?")
+                .authoritiesByUsernameQuery(
+                        "select username, role from user_roles where username=?");
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+//        http.authorizeRequests()
+//                .antMatchers("/template/createPerson").hasAuthority("ROLE_ADMIN")
+//                .antMatchers("/template/getPersonByNameJpa").hasAuthority("ROLE_ADMIN");
+
+        http.csrf().disable();
+
+    }
+
+
 }
