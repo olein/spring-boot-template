@@ -45,6 +45,13 @@ dependencies {
 
 	compile group: 'org.hibernate', name: 'hibernate-c3p0', version: '5.2.6.Final'
 
+	//security
+	compile group: 'org.springframework.security', name: 'spring-security-core', version: '4.2.3.RELEASE'
+	compile group: 'org.springframework.security', name: 'spring-security-web', version: '4.2.3.RELEASE'
+	compile group: 'org.springframework.security', name: 'spring-security-config', version: '4.2.3.RELEASE'
+
+
+
 	runtime('mysql:mysql-connector-java')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
