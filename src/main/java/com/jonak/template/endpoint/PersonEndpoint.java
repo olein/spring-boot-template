@@ -40,7 +40,7 @@ public class PersonEndpoint {
             response.setResult(false);
         }
 
-        if(!securityService.authenticateUser(request.getUsername(), request.getPassword(), "ROLE_ADMIN")) {
+        if(!securityService.authenticateUser(request.getUsername(), request.getPassword(), "ROLE_ADMIN, ROLE_USER")) {
             response.setResult(false);
             return response;
         }

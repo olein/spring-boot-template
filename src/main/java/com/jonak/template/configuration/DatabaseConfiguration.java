@@ -6,11 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
-import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,17 +13,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.beans.PropertyVetoException;
-import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Profile("Development")
-public class DatabaseConfiguration  extends WebSecurityConfigurerAdapter{
+public class DatabaseConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private Environment env;
@@ -71,6 +63,10 @@ public class DatabaseConfiguration  extends WebSecurityConfigurerAdapter{
 //                .antMatchers("/template/getPersonByNameJpa").hasAuthority("ROLE_ADMIN");
 
         http.csrf().disable();
+
+        //http.addFilterBefore(new CustomFilter(), BasicAuthenticationFilter.class);
+        //http.addFilterAfter(new CustomFilter(), BasicAuthenticationFilter.class);
+        http.addFilter(new CustomFilter());
 
     }
 
