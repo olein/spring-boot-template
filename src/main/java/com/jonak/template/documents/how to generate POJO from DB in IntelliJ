@@ -1,0 +1,6 @@
+step 01: add hibernate to the project module.
+step 02: open persistence tab.
+step 03: check if the hibernate.cfg.xml is properly configured
+step 04: Right click on the module name
+step 05: Generate  persistence mapping -- > from DB schema
+step 06: select tables and map  foreign keys properly to correctly generate the pojo
