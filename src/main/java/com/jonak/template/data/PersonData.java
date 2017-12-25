@@ -70,6 +70,11 @@ public class PersonData implements Serializable{
         return this;
     }
 
+    public PersonData withName(String name) {
+        this.name = name;
+        return this;
+    }
+
     public int getPersonId() {
         return personId;
     }
