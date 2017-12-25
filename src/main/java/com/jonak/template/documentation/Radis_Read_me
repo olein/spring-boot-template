@@ -1,0 +1,17 @@
+Step 01:
+
+add dependency
+compile  'org.springframework.boot:spring-boot-starter-data-redis:1.5.7.RELEASE'
+compile  'biz.paluch.redis:lettuce:5.0.0.Beta1'
+compile "redis.clients:jedis:2.6.1"
+
+Step 02:
+
+configuration:
+
+1. configure jedisConnectionFactory
+2. configure redisTemplate
+
+Step 03:
+
+add Endpoint, service and dao to access Radis.  

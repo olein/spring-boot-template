@@ -39,7 +39,7 @@ public class DatabaseConfiguration extends WebSecurityConfigurerAdapter {
 
         dataSource.setMinPoolSize(10);
         dataSource.setMaxPoolSize(120);
-        dataSource.setMaxIdleTime(10000);
+        dataSource.setMaxIdleTime(10);
         dataSource.setMaxStatements(50);
         dataSource.setAcquireIncrement(5);
 
