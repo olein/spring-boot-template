@@ -47,4 +47,11 @@ public class PersonEndpoint {
         }
         return response;
     }
+
+    @RequestMapping(value = "/", method = RequestMethod.GET,
+            produces = "application/json", consumes = "application/json")
+    public @ResponseBody
+    String createContact() {
+        return "template project";
+    }
 }
