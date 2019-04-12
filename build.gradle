@@ -29,7 +29,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile group: 'log4j', name: 'log4j', version: '1.2.16'
 
-	compile group: 'org.hibernate', name: 'hibernate-c3p0', version: '5.2.6.Final'
+	//compile group: 'org.hibernate', name: 'hibernate-c3p0', version: '5.2.6.Final'
 
 	runtime('mysql:mysql-connector-java')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
