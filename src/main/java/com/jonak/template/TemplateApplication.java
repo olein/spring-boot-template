@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class})
 @SpringBootApplication
 @ComponentScan("com.jonak.template")
-@EnableJpaRepositories
+//@EnableJpaRepositories
 public class TemplateApplication extends SpringBootServletInitializer {
 
 	@Override

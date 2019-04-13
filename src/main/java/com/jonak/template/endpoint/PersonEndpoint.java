@@ -52,6 +52,6 @@ public class PersonEndpoint {
             produces = "application/json")
     public @ResponseBody
     String createContact() {
-        return "template project";
+        return "template project 1.0.10";
     }
 }
