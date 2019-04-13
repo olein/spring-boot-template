@@ -9,10 +9,10 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class})
+@EnableAutoConfiguration
 @SpringBootApplication
 @ComponentScan("com.jonak.template")
-//@EnableJpaRepositories
+@EnableJpaRepositories
 public class TemplateApplication extends SpringBootServletInitializer {
 
 	@Override
